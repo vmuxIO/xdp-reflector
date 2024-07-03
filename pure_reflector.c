@@ -16,7 +16,12 @@ int xdp_reflector(struct xdp_md *ctx)
     __u8 our_mac[ETH_ALEN] = OUR_MAC;
     if (__builtin_memcmp(eth->h_dest, our_mac, ETH_ALEN) == 0) {
         // packet is for us. Let it pass.
-        return XDP_PASS; // TODO
+        return XDP_PASS;
+    }
+    __u8 broadcast_mac[ETH_ALEN] = { 0xFF, 0xFF, 0xFF , 0xFF, 0xFF, 0xFF };
+    if (__builtin_memcmp(eth->h_dest, broadcast_mac, ETH_ALEN) == 0) {
+        // packet is for us. Let it pass.
+        return XDP_PASS;
     }
 
     // packet is for someone else. Send it back into the network.
