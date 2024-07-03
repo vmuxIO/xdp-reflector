@@ -49,5 +49,18 @@ This project is similarly structured as the
 [XDP tutorial](https://github.com/xdp-project/xdp-tutorial),
 which is a great resource for learning XDP prorgamming.
 
+## Reflector variant: `pure_reflector`
+
+The normal reflector properly switches the src and dst MAC address before sending the packet back into the network.
+As a variant, `pure_reflector` does not touch MAC addresses.
+It can be used to reflect packets back into the network that don't belong to this host.
+For that compile it with your local hosts MAC address (so that these packet are not reflected), and allow the host to accept packets destined for other hosts.
+```bash
+rm pure_reflector.o
+make pure_reflector.o OUR_MAC="{ 0x77, 0x96, 0x91, 0xb3, 0x8b, 0x77}"
+sudo ip link set <DEV> promisc on
+sudo ip link set <DEV> xdpgeneric obj pure_reflector.o sec xdp
+```
+
 ## License
 This project is distributed under [MIT](LICENSE) license.

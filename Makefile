@@ -1,5 +1,8 @@
-XDP_TARGETS := reflector
+XDP_TARGETS := reflector pure_reflector
 USER_TARGETS :=
+
+# compile parameter:
+OUR_MAC := "{ 0x11, 0x22, 0x33, 0x44, 0x55, 0x66}"
 
 LLC ?= llc
 CLANG ?= clang
@@ -60,6 +63,7 @@ $(XDP_OBJ): %.o: %.c  Makefile $(OBJECT_LIBBPF)
 	$(CLANG) -S \
 	    -target bpf \
 	    -D __BPF_TRACING__ \
+			-DOUR_MAC="$(OUR_MAC)" \
 	    $(BPF_CFLAGS) \
 	    -Wall \
 	    -Wno-unused-value \
